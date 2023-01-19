@@ -8,6 +8,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
 }
 
 a {
@@ -27,4 +28,8 @@ a {
     color: white;
     background: black;
   }
+}
+
+_input-bar[contentEditable=true]:empty:not(:focus):before {
+  content: attr(data-placeholder);
 }
