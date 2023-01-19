@@ -1,13 +1,16 @@
+import { prisma } from "@prisma/client";
 import React from "react";
+import Card from "./Card";
+import TodoList from "./TodoList";
 
 
 interface InputBarProps {
     className?: string;
-    cardRef: React.Ref<HTMLDivElement>;
+    listRef: React.RefObject<TodoList>;
 }
 
 interface InputBarState {
-    text?: string;
+    text: string;
     keyDown: boolean;
     placeholder: string;
     height: number;
@@ -24,50 +27,58 @@ class InputBar extends React.Component<InputBarProps, InputBarState> {
             text: "",
             keyDown: false,
             placeholder: this.randomPlaceholder(),
-            height: 25
+            height: 25,
         };
-
+        
         this.keyDownHandler = this.keyDownHandler.bind(this);
         this.keyUpHandler = this.keyUpHandler.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
     }
 
-    keyDownHandler(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    async keyDownHandler(e: React.KeyboardEvent<HTMLTextAreaElement>) {
         if (e.key == "Enter" && !e.shiftKey) {
             e.preventDefault();
 
             if (!this.state.keyDown && this.state.text) {
-                
                 this.setState({
                     keyDown: true
                 });
                 
-                console.log(`submitted value: ${this.state.text}`);
                 // TODO submit this.state.text to api and create new card and save.
+                // TODO submit to api
+
+                // TODO create new card and save
+                const listCurrent = this.props.listRef.current;
+                if (listCurrent) {
+                    const items = listCurrent.state.items;
+                    items.push({text: this.state.text, id: "123", authorId: "abc"});
+                    listCurrent.setState({ items });
+                
+                    const body = JSON.stringify({ text: this.state.text });
+
+                    const res = await fetch("/api/item", {method: "POST", body });
+                    
+                    if (res.ok) {
+                        // TODO success ribbon.
+                        console.log("SUCCESS!!");
+                    } else {
+                        // TODO failure ribbon.
+                        console.error("FAILURE!!!!!! in my benis");
+                    }
+                }
+                
+                console.log(`submitted value: ${this.state.text}`);
                 
                 this.setState({ 
                     text: "",
                     placeholder: this.randomPlaceholder()
                 });
 
-                this.props.cardRef
+                
             }
+        } else if (e.key == "Control") {
+            console.log("ctrl");
         }
-
-        const target = e.target as HTMLElement;
-        target.style.height = 'inherit';
-
-        const compStyle = window.getComputedStyle(target);
-        const getCompValue = (prop: string) => parseInt(compStyle.getPropertyValue(prop));
-
-        let height = 
-                getCompValue('border-top-width') + 
-                getCompValue('border-bottom-width') + 
-                target.scrollHeight +
-                getCompValue('padding-top') + 
-                getCompValue('padding-bottom');
-
-        target.style.height = `${height}px`;
     }
 
     keyUpHandler(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -81,11 +92,9 @@ class InputBar extends React.Component<InputBarProps, InputBarState> {
     }
 
     onChangeHandler(e: React.ChangeEvent<HTMLTextAreaElement>) {
-        this.setState({
-            text: e.target.value
-        });
+        console.log(`this.state.text: ${this.state.text}, e.target.value: ${e.target.value}`);
 
-        // console.log(`this.state.text: ${this.state.text}, e.target.value: ${e.target.value}`);
+        this.setState({ text: e.target.value });
     }
 
     randomPlaceholder(): string {
@@ -95,7 +104,7 @@ class InputBar extends React.Component<InputBarProps, InputBarState> {
         const placeholders = [
             "Buy apples",
             "Do homework",
-            "Take my meds",
+            "Take meds",
             "File taxes"
         ];
 
@@ -105,18 +114,20 @@ class InputBar extends React.Component<InputBarProps, InputBarState> {
     }
 
     render() {
-        
+        // TODO placeholder in ::after
         // TODO figure out a way to make textarea auto-expand for content.
         return (
             <div className={`m-2 ${this.props.className}`}>
                 <textarea
-                    className="border-gray-400 border-2 rounded-sm focus:border-blue-700 outline-none block px-3 py-2 w-full transition ease-linear resize-none overflow-hidden" 
+                    className="_input-bar border-gray-400 border-2 rounded-sm focus:border-blue-700 outline-none block px-3 py-2 w-full transition ease-linear resize-none overflow-hidden bg-white min-h-min max-h-50" 
                     onKeyDown={ this.keyDownHandler }
                     onKeyUp={ this.keyUpHandler }
+                    data-placeholder={ this.state.placeholder }
                     placeholder={ this.state.placeholder }
-                    onChange={ this.onChangeHandler }
+                    onInput={ this.onChangeHandler }
                     value={ this.state.text }
-                ></textarea>
+                >
+                </textarea>
             </div>
         );
     }
