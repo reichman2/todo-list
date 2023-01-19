@@ -1,16 +1,31 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import React from 'react'
-import Card from '../components/Card'
-import CardContainer from '../components/CardContainer'
-import Container from '../components/CardContainer'
-import InputBar from '../components/InputBar'
-import styles from '../styles/Home.module.css'
+import type { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
+import React, { useState } from 'react';
+import Modal from '../components/Modal';
+import InputBar from '../components/InputBar';
+import TodoList from '../components/TodoList';
+import styles from '../styles/Home.module.css';
+import DeleteModal from '../components/DeleteModal';
+import useSWR from 'swr';
+
+
+// const fetcher = (input: RequestInfo | URL, init?: RequestInit | undefined) => fetch(input, init).then((res) => res.json());
+const fetcher = async (input: RequestInfo | URL, init?: RequestInit | undefined) => {
+  const data = await fetch(input, init);
+  return data.json();
+}
 
 const Home: NextPage = () => {
-  const cardRef = React.createRef<HTMLDivElement>();
+  const { data, error } = useSWR('/api/items', fetcher);
+  
+  if (error) return <div>Failed to load items.</div>
+  if (!data) return <div>Loading...</div>
 
+
+  const listRef = React.createRef<TodoList>();
+  const modalRef = React.createRef<Modal>();
+  const deleteModalRef = React.createRef<DeleteModal>();
+  
   return (
     <div className="min-w-full w-full min-h-screen bg-gray-100">
       <Head>
@@ -19,15 +34,30 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      {/* <Modal onOkay={() => console.log("okey")} isVisible={ true } ref={ modalRef }>
+        <span className="text-2xl font-semibold block mb-5">Remove Task?</span>
+          <div className="ml-1">
+            <span className="block">Would you like to remove the following task:</span>
+            <span className="block mx-2 my-3">TODO TASK NAME</span>
+          </div>
+      </Modal> */}
+
+      <DeleteModal modalRef={ modalRef } ref={ deleteModalRef } />
+
       <div className="flex justify-center">
-        <InputBar className="w-3/4 py-20" cardRef={cardRef} />
+        <InputBar className="w-3/4 py-20" listRef={listRef} />
       </div>
       
-        <div className="w-full flex justify-center" ref={cardRef}>
+      <TodoList ref={ listRef } modalRef={ modalRef } deleteModalRef={ deleteModalRef } apiData={ data }>
+        
+      </TodoList>
+        {/* <div className="w-full flex justify-center" ref={cardRef}>
           <Card>Hello World!</Card>
-        </div>
+        </div> */}
     </div>
   );
 }
+
+
 
 export default Home;
