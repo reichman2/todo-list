@@ -28,7 +28,7 @@ class TodoList extends React.Component<TodoListProps, TodoListState> {
                 {
                     id: "stank",
                     authorId: "stankyAuthorSam",
-                    text: "this is a stanky todo reminder message."
+                    text: "Type in the text box above to get started.  To delete an item, click on it!"
                 },
                 ...this.props.apiData
             ]
