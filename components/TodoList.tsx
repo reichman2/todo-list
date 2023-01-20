@@ -44,6 +44,7 @@ class TodoList extends React.Component<TodoListProps, TodoListState> {
         const removeItem = () => {
             this.remove(key);
             this.props.modalRef.current?.hide();
+
         }
 
         // TODO: this might be better approached by using a single callback function, so im not setting this function every single time...
@@ -51,8 +52,21 @@ class TodoList extends React.Component<TodoListProps, TodoListState> {
     }
 
     remove(key: number) {
+
         console.log('remove', key);
-        this.setState({ items: this.state.items.filter((e, i) => i !== key) });
+        this.setState({ items: this.state.items.filter((e, i) => {
+            if (i == key) {
+                console.log("Deleting:", e);
+                const body = JSON.stringify({ postId: e.id });
+
+                const res = fetch("/api/item", { method: "DELETE", body });
+                console.log(res);
+
+                return false;
+            } 
+            
+            return true;
+        })});
         console.log(this.state.items);
         
     }
