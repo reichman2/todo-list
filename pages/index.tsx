@@ -7,6 +7,7 @@ import TodoList from '../components/TodoList';
 import styles from '../styles/Home.module.css';
 import DeleteModal from '../components/DeleteModal';
 import useSWR from 'swr';
+import Ribbon from '../components/Ribbon';
 
 
 // const fetcher = (input: RequestInfo | URL, init?: RequestInit | undefined) => fetch(input, init).then((res) => res.json());
@@ -34,14 +35,6 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/* <Modal onOkay={() => console.log("okey")} isVisible={ true } ref={ modalRef }>
-        <span className="text-2xl font-semibold block mb-5">Remove Task?</span>
-          <div className="ml-1">
-            <span className="block">Would you like to remove the following task:</span>
-            <span className="block mx-2 my-3">TODO TASK NAME</span>
-          </div>
-      </Modal> */}
-
       <DeleteModal modalRef={ modalRef } ref={ deleteModalRef } />
 
       <div className="flex justify-center">
@@ -51,9 +44,6 @@ const Home: NextPage = () => {
       <TodoList ref={ listRef } modalRef={ modalRef } deleteModalRef={ deleteModalRef } apiData={ data }>
         
       </TodoList>
-        {/* <div className="w-full flex justify-center" ref={cardRef}>
-          <Card>Hello World!</Card>
-        </div> */}
     </div>
   );
 }
