@@ -51,33 +51,32 @@ class InputBar extends React.Component<InputBarProps, InputBarState> {
                 const listCurrent = this.props.listRef.current;
                 if (listCurrent) {
                     const items = listCurrent.state.items;
-                    items.push({text: this.state.text, id: "123", authorId: "abc"});
-                    listCurrent.setState({ items });
-                
-                    const body = JSON.stringify({ text: this.state.text });
-
-                    const res = await fetch("/api/item", {method: "POST", body });
                     
+                    const body = JSON.stringify({ text: this.state.text });
+                    
+                    const res = await fetch("/api/item", { method: "POST", body });
+                    const resJson = await res.json();
+
                     if (res.ok) {
                         // TODO success ribbon.
                         console.log("SUCCESS!!");
+                        items.push({ text: this.state.text, id: resJson['id'], authorId: resJson['authorId'] });
+
+                        this.setState({ 
+                            text: "",
+                            placeholder: this.randomPlaceholder()
+                        });
                     } else {
                         // TODO failure ribbon.
-                        console.error("FAILURE!!!!!! in my benis");
+                        console.error("FAILURE!!!!!!");
                     }
-                }
-                
-                console.log(`submitted value: ${this.state.text}`);
-                
-                this.setState({ 
-                    text: "",
-                    placeholder: this.randomPlaceholder()
-                });
 
+                    listCurrent.setState({ items });
+                }
                 
             }
         } else if (e.key == "Control") {
-            console.log("ctrl");
+            // TODO implement formatting
         }
     }
 
@@ -87,13 +86,10 @@ class InputBar extends React.Component<InputBarProps, InputBarState> {
                 keyDown: false
             });
 
-            console.log("eup");
         }
     }
 
     onChangeHandler(e: React.ChangeEvent<HTMLTextAreaElement>) {
-        console.log(`this.state.text: ${this.state.text}, e.target.value: ${e.target.value}`);
-
         this.setState({ text: e.target.value });
     }
 
@@ -105,7 +101,11 @@ class InputBar extends React.Component<InputBarProps, InputBarState> {
             "Buy apples",
             "Do homework",
             "Take meds",
-            "File taxes"
+            "File taxes",
+            "Call mom",
+            "Call dad",
+            "Book flight",
+            "Fix merge conflict"
         ];
 
         let rand = Math.floor(Math.random() * placeholders.length);

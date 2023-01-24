@@ -13,6 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (!authorId) return res.status(401).write("401 Unauthorized");
 
+    // TODO implement csrf token
 
     if (req.method === "POST") {
         const post = await prisma.todoItem.create({
@@ -22,14 +23,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
         });
         
-        console.log(`I got that stinky message!: ${post.text}`)
+        console.log(`I got that stinky message!: ${post.text}`);
+        // console.log(JSON.stringify(post));
 
-        return res.status(200).write(post);
+        return res.status(200).json(post);
     } else if (req.method === "DELETE") {
-        const postId = JSON.parse(req.body)['postId'];
-        // console.log(`postId: ${postId}`);
+        const postId = JSON.parse(req.body)['postId'] as string;
+        console.log(`postId: ${postId}`);
 
-        // TODOcheck author id so other users cannot delete items that aren't theirs
+        // TODO check author id so other users cannot delete items that aren't theirs
         
         const post = await prisma.todoItem.delete({
             where: {
@@ -37,8 +39,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
         });
 
-        console.log(`Deleting: ${post}`);
-        return res.status(200).write(post);
+        console.log(`Deleting:`, post);
+        return res.status(200).json(post);
     }
 }
 
