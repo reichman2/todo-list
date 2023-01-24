@@ -23,7 +23,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // console.log(await redis.get(USER_PREFIX + req.cookies.id));
     } else {
         id = v4();
-        setCookie(res, 'id', id, { path: '/' })
+        let exp = new Date(Date.now() + (86400 * 1000 * 14));
+        setCookie(res, 'id', id, { path: '/', expires: exp })
+
+        // TODO allow cookie refresh.
     }
 
     res.send(`<h1 style="font-family: sans-serif; color: #212121;">hello, ${ id }</h1><span style="font-family: sans-serif;">Your id is: ${ id }!`);
