@@ -26,10 +26,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         let exp = new Date(Date.now() + (86400 * 1000 * 14));
         setCookie(res, 'id', id, { path: '/', expires: exp })
 
-        // TODO allow cookie refresh.
+        // TODO implement cookie refresh.
     }
-
-    res.send(`<h1 style="font-family: sans-serif; color: #212121;">hello, ${ id }</h1><span style="font-family: sans-serif;">Your id is: ${ id }!`);
+    
+    if (req.method === "GET")
+        res.send(`<h1 style="font-family: sans-serif; color: #212121;">hello, ${ id }</h1><span style="font-family: sans-serif;">Your id is: ${ id }!`);
 }
 
 export default handler;

@@ -23,7 +23,7 @@ export default class Card extends React.Component<CardProps> {
     render() {
         return (
             <div 
-                className={`bg-white rounded-md shadow-sm hover:shadow-md transition-shadow ease-linear px-8 py-4 w-fit text-gray-800 mx-2 my-2 ${this.props.className || ""}`}
+                className={`bg-white rounded-md shadow-sm hover:shadow-md transition-shadow ease-linear px-8 py-4  text-gray-800 mx-2 my-2 ${this.props.className || ""}`}
                 onClick={ this.onClickHandler }
                 title={ this.props.title }
             >

@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 html,
 body {
   padding: 0;
@@ -33,3 +34,10 @@ a {
 _input-bar[contentEditable=true]:empty:not(:focus):before {
   content: attr(data-placeholder);
 }
+
+.button-comp {
+  
+}
+
+
+@import "Checkbox.module.css";

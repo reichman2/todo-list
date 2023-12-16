@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!uid) return res.status(401).write("401 Unauthorized");
     const body = JSON.parse(req.body);
     let authorId = await redis.get(USER_PREFIX + uid);
-
+    
     if (!authorId) return res.status(401).write("401 Unauthorized");
 
     // TODO implement csrf token
@@ -23,9 +23,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
         });
         
-        console.log(`I got that stinky message!: ${post.text}`);
-        // console.log(JSON.stringify(post));
-
         return res.status(200).json(post);
     } else if (req.method === "DELETE") {
         const postId = JSON.parse(req.body)['postId'] as string;
