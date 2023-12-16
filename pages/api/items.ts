@@ -28,6 +28,7 @@ export type ApiDataEntries = {
     authorId: string;
     title?: string;
     text: string;
+    completed: boolean;
 }
 
 export default handler;
