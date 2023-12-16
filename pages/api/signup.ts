@@ -19,7 +19,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         
         res.send((todoItems || ""));
     } else if (req.method === "POST") {
-        
+        const username = req.body.username;
+        const password = req.body.password;
+        const email = req.body.email;
     }
 }
 
