@@ -19,16 +19,17 @@ interface TodoListState {
 
 
 class TodoList extends React.Component<TodoListProps, TodoListState> {
-
     constructor(props: TodoListProps) {
         super(props);
 
         this.state = {
+            // TODO remove this default item in favor of one that is created in prisma by default.
             items: [
                 {
                     id: "stank",
                     authorId: "stankyAuthorSam",
-                    text: "Type in the text box above to get started.  To delete an item, click on it!"
+                    text: "Type in the text box above to get started.  To cross off an item, click on it!",
+                    completed: false
                 },
                 ...this.props.apiData
             ]
@@ -52,7 +53,6 @@ class TodoList extends React.Component<TodoListProps, TodoListState> {
     }
 
     remove(key: number) {
-
         console.log('remove', key);
         this.setState({ items: this.state.items.filter((e, i) => {
             if (i == key) {
@@ -67,16 +67,29 @@ class TodoList extends React.Component<TodoListProps, TodoListState> {
             
             return true;
         })});
+
         console.log(this.state.items);
-        
     }
 
     render() {
-        const elems = this.state.items.map((e, i) => (<TodoItem title={ `id: ${e.id}\nauthorId: ${e.authorId}` } key={ i } onClick={ () => this.openModal(i) }>{ e.text }</TodoItem>));
+        const elems = this.state.items.map((e, i) => {
+            return (
+                <TodoItem 
+                    title={ `id: ${e.id}\nauthorId: ${e.authorId}` } 
+                    key={ i } 
+                    onDelete={ () => this.openModal(i) }
+                    completed={ e.completed }
+                >
+                    { e.text }
+                </TodoItem>
+            );
+        });
 
         return (
-            <div className="w-full flex justify-center flex-wrap">
-                { elems }
+            <div className="w-full flex justify-center">
+                <div className="w-4/5">
+                    { elems }
+                </div>
             </div>
         );
     }
