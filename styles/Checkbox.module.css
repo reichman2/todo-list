@@ -1,0 +1,15 @@
+.checkbox {
+    appearance: none;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    margin-right: 10px;
+
+    &:checked {
+       background: red; 
+    }
+}
